@@ -1,0 +1,83 @@
+<html><body>
+  <canvas id="canvas"></canvas>
+</body>
+
+ <script>
+
+const rand = function(num) {
+  return Math.floor(Math.random() * num) + 1;
+};
+
+const colorArray = ['#66acfa', '#66fab0', '#bbff33', '#b8ff33', '#6eff33', '#5bff33'];  
+  
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = 900;
+canvas.height = 600;
+ctx.fillStyle = "#338387";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+const createBoxes = function(count, canvasWidth, canvasHeigth) {
+  const arr = [];
+  for(let i = 0; i < count; i++){
+    const boxWidth = 30;
+    const boxHeight = 30;
+    arr[i] = {
+      x: rand(canvasWidth - boxWidth),
+      y:rand(canvasHeigth - boxHeight),
+      width: 30,
+      height: 30,
+      xDelta: 1, 
+      yDelta: 1, 
+      speed: 9,
+      color: colorArray[rand(colorArray.length)-1],
+      draw: function() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+      },
+      update: function() {
+        this.x += this.xDelta * this.speed;
+        this.y += this.yDelta * this.speed;
+        if(this.x + this.width >= canvas.width) {
+          this.xDelta = -1;
+        } else if(this.x <= 0){
+          this.xDelta = 1; }
+        if(this.y >= canvas.height - this.height) {
+          this.yDelta = -1;
+        } else if(this.y <= 0) {
+          this.yDelta = 1;}
+      }
+    }
+  }
+ return arr;
+}
+
+const newBox = createBoxes(110, canvas.width, canvas.height);
+console.log(newBox);
+
+const draw1 = function(boxes) {
+  for(let im = 0; im < boxes.length; im++) {
+    boxes[im].draw(); 
+  }
+}
+const updateData = function(boxes) {
+  for(let ic = 0; ic < boxes.length; ic++) {
+    boxes[ic].update();
+  }
+}
+
+const loop = function() {
+  ctx.fillStyle = "#338387";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  console.log(newBox);
+  draw1(newBox);
+  updateData(newBox);
+  requestAnimationFrame(loop);
+}
+
+loop(); 
+
+</script>
+
+
+</html>
